@@ -1,0 +1,25 @@
+html * {
+  font-family: "Noto Sans JP", sans-serif;
+}
+
+img[draggable=true] {
+  -webkit-touch-callout: none;
+}
+
+.dnd-poly-drag-image {
+  opacity: 1 !important;
+  width: 82px !important;
+  height: 100px !important;
+  max-height: 100px !important;
+  position: absolute !important;
+}
+/* applied when the drag effect is none and the operation ends */
+.dnd-poly-drag-image.snapback {
+  -webkit-transition: -webkit-transform 250ms ease-out !important;
+  -moz-transition: -moz-transform 250ms ease-out !important;
+  -o-transition: -o-transform 250ms ease-out !important;
+  transition: transform 250ms ease-out !important;
+}
+/* applied always as a base class for drop effect styles */
+.dnd-poly-drag-icon {
+}
