@@ -1,7 +1,7 @@
 {
   "hosting": [
     {
-      "site": "whim-shogi",
+      "site": "whim-shogi-deck",
       "public": "dist",
       "ignore": [
         "firebase.json",
