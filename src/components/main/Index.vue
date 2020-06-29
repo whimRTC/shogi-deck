@@ -1,10 +1,13 @@
 <template>
   <div class="main" :class="`area-${areaLength}`">
     <div class="order">
-      <div
-        class="circle-0"
-        :class="`active-${$whim.state.currentTurnIndex}`"
-      ></div>
+      <div class="circle-0" :class="`active-${$whim.state.currentTurnIndex}`">
+        {{
+          $whim.state[$whim.users[0].id].pieces.filter(
+            piece => piece.position == "hand"
+          ).length
+        }}
+      </div>
 
       <template v-for="player in this.$whim.users.length - 1">
         <a href="#" class="arrow" :key="`arrow-${player}`"></a>
@@ -14,7 +17,13 @@
             `circle-${player}`,
             `active-${$whim.state.currentTurnIndex}`
           ]"
-        ></div>
+        >
+          {{
+            $whim.state[$whim.users[player].id].pieces.filter(
+              piece => piece.position == "hand"
+            ).length
+          }}
+        </div>
       </template>
     </div>
     <div v-for="x in xRange" :key="x" class="row" :class="`row-${x}`">
@@ -34,13 +43,7 @@
       </div>
     </div>
     <div class="flex">
-      <div
-        class="hands"
-        :class="[
-          `background-${$whim.accessUser.positionNumber - 1}`,
-          `active-${$whim.state.currentTurnIndex}`
-        ]"
-      >
+      <div class="hands" :class="{ active: myTurn }">
         <Hand
           v-for="i in myHands"
           :key="i"
@@ -48,7 +51,15 @@
           @dragging="setDragging"
         ></Hand>
       </div>
-      <img class="image" src="@/assets/images/deck.png" @click="drawPiece" />
+      <img
+        class="image"
+        :class="[
+          { 'color-filter--disable': !dockEnabled && !deckColor },
+          deckColor
+        ]"
+        src="@/assets/images/deck.png"
+        @click="drawPiece"
+      />
     </div>
     <div class="modal" v-if="judgeNariginId">
       <div class="modal__bg"></div>
@@ -109,7 +120,8 @@ export default {
   data() {
     return {
       dragging: null,
-      judgeNariginId: null
+      judgeNariginId: null,
+      deckColor: null
     };
   },
   components: {
@@ -146,6 +158,19 @@ export default {
     },
     sound() {
       return this.$whim.state.sound;
+    },
+    action() {
+      return this.$whim.state.action;
+    },
+    myTurn() {
+      return (
+        this.$whim.users.map(user => user.id)[
+          this.$whim.state.currentTurnIndex
+        ] === this.$whim.accessUser.id
+      );
+    },
+    dockEnabled() {
+      return this.myHands.length < 5;
     }
   },
   methods: {
@@ -168,13 +193,10 @@ export default {
         return [this.areaLength - 1 - position[1], position[0]];
       }
     },
+
     drawPiece() {
       // 自分のターンではないとき
-      if (
-        this.$whim.users.map(user => user.id)[
-          this.$whim.state.currentTurnIndex
-        ] !== this.$whim.accessUser.id
-      ) {
+      if (!this.myTurn) {
         return;
       }
       // 自分の持ち駒が5個以上のとき
@@ -200,6 +222,10 @@ export default {
       this.$whim.assignState({
         [this.$whim.accessUser.id]: {
           pieces
+        },
+        action: {
+          label: "draw",
+          userIndex: this.$whim.accessUser.positionNumber - 1
         }
       });
       this.nextTurn();
@@ -332,6 +358,17 @@ export default {
           sound: false
         });
       }
+    },
+    action: function(newAction) {
+      if (newAction?.label == "draw") {
+        this.deckColor = `color-filter--${newAction.userIndex}`;
+        setTimeout(() => {
+          this.deckColor = "";
+          this.$whim.assignState({
+            action: null
+          });
+        }, 1000);
+      }
     }
   }
 };
@@ -391,7 +428,9 @@ $size: (
   @for $i from 0 to 7 {
     .circle-#{$i} {
       position: relative;
-
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 9vw;
       max-width: 5vh;
       height: 9vw;
@@ -489,6 +528,14 @@ $size: (
     }
   }
 }
+
+.hands {
+  background-color: #00000080;
+  &.active {
+    background-color: #ffffff80;
+  }
+}
+
 .modal {
   height: 100%;
   position: fixed;
@@ -514,4 +561,7 @@ $size: (
 .select-piece {
   width: 20%;
 }
+// .image {
+//   filter: hue-rotate(90deg);
+// }
 </style>

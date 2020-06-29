@@ -3,7 +3,10 @@
     :src="require(`@/assets/images/${label}.png`)"
     class="piece"
     :draggable="draggable"
-    :class="{ dragging }"
+    :class="[
+      { dragging },
+      `color-filter--${$whim.accessUser.positionNumber - 1}`
+    ]"
     @dragstart="dragPiece($event)"
     @dragend="dragend"
   />
@@ -58,6 +61,7 @@ export default {
   height: 10vw;
   max-height: 7vh;
   float: left;
+  z-index: 2;
 }
 .dragging {
   height: 18vw !important;

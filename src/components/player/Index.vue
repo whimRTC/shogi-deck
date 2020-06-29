@@ -33,7 +33,7 @@ export default {
       // box-shadow: 0 0 0 10px rgba(map-get($user-colors, $i), 0.2) inset;
       border: 10px solid rgba(map-get($user-colors, $i), 0.2);
       &.active-#{$i} {
-        border: 10px solid rgba(map-get($user-colors, $i), 0.9);
+        border: 10px solid rgba(map-get($user-colors, $i), 1);
       }
     }
   }

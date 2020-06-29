@@ -22,10 +22,10 @@ Vue.prototype.$piece = place => {
   let self = null;
 
   stateArray.forEach(value => {
-    const pieceIndex = (value[1].pieces || []).findIndex(
+    const pieceIndex = (value[1]?.pieces || []).findIndex(
       piece => piece.position[0] === place[0] && piece.position[1] === place[1]
     );
-    const piece = (value[1].pieces || [])[pieceIndex];
+    const piece = (value[1]?.pieces || [])[pieceIndex];
     if (piece) {
       // console.log(piece);
       self = {

@@ -1,10 +1,40 @@
 $user-colors: (
-  0: #E60012, 
-  1: #00A0E9,
-  2: #FCC800,
-  3: #8FC31F,
-  4: #00479D,
-  5: #920783,
-  6: #009B6B,
-  7: #E5006A
+  0: #e64400, 
+  1: #00e67e,
+  2: #b700e6,
+  3: #dce600,
+  4: #00a2e6,
+  5: #e60069,
+  6: #2fe600,
+  7: #0b00e6
 );
+
+.color-filter{
+  &--0{
+    filter: brightness(90%) saturate(150%) hue-rotate(330deg);
+  }
+  &--1{
+    filter: brightness(90%) saturate(150%) hue-rotate(95deg);
+  }
+  &--2{
+    filter: brightness(90%) saturate(150%) hue-rotate(240deg);
+  }
+  &--3{
+    filter: brightness(90%) saturate(150%) hue-rotate(15deg);
+  }
+  &--4{
+    filter: brightness(90%) saturate(150%) hue-rotate(150deg);
+  }
+  &--5{
+    filter: brightness(90%) saturate(150%) hue-rotate(285deg);
+  }
+  &--6{
+    filter: brightness(90%) saturate(150%) hue-rotate(60deg);
+  }
+  &--7{
+    filter: brightness(90%) saturate(150%) hue-rotate(195deg);
+  }
+  &--disable{
+    filter: brightness(30%)
+  }
+}

@@ -6,8 +6,9 @@
       :key="user.id"
       :class="whimUserWindowClass(user)"
       :displayUser="user"
+      class="player"
     />
-    <div v-if="$whim.state.phase === 'result'" class="result">
+    <div v-if="$whim.state.phase === 'result'">
       <Result
         v-for="user in $whim.users"
         :key="user.id"
@@ -21,6 +22,10 @@
 
 <script>
 import InitOu from "@/assets/config/initOu";
+
+function random(a) {
+  return a[Math.floor(Math.random() * a.length)];
+}
 
 export default {
   name: "App",
@@ -48,7 +53,7 @@ export default {
             direction: InitOu[userLength][i].direction,
             pieces: [
               {
-                label: "ou",
+                label: random(["ou", "gyoku"]),
                 position: InitOu[userLength][i].ouPosition
               },
               {
@@ -73,6 +78,9 @@ export default {
   z-index: 1;
 }
 .result {
-  z-index: 2;
+  z-index: 5;
+}
+.player {
+  z-index: 0;
 }
 </style>

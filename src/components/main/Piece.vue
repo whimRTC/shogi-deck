@@ -1,9 +1,13 @@
 <template>
-  <div class="piece-box" :class="[{ droppable }, `background-${ownerNumber}`]">
+  <div class="piece-box" :class="[{ droppable }]">
     <img
       :src="require(`@/assets/images/${label}.png`)"
       class="piece"
-      :class="[rotateClass, { dragging: myDragging }]"
+      :class="[
+        rotateClass,
+        { dragging: myDragging },
+        `color-filter--${this.ownerNumber}`
+      ]"
       v-if="label"
       :draggable="draggable"
       @dragstart="dragPiece($event, place)"
@@ -137,6 +141,7 @@ export default {
   width: 100%;
 }
 .piece {
+  z-index: 2;
   margin: auto;
   width: 60%;
 }
@@ -153,11 +158,11 @@ export default {
   transform: rotate(90deg);
 }
 
-@for $i from 0 to 7 {
-  .background-#{$i} {
-    background-color: rgba(map-get($user-colors, $i), 0.3);
-  }
-}
+// @for $i from 0 to 7 {
+//   .background-#{$i} {
+//     background-color: rgba(map-get($user-colors, $i), 0.3);
+//   }
+// }
 
 .dragging {
   height: 18vw !important;
