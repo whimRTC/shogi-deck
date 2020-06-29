@@ -181,6 +181,15 @@ export default {
       return false;
     },
     drawPiece() {
+      // 自分のターンではないとき
+      if (
+        this.$whim.state.turnOrder[this.$whim.state.currentTurnIndex] !==
+        this.$whim.accessUser.id
+      ) {
+        return;
+      }
+      // 自分の持ち駒が5個以上のとき
+
       let pieces = this.$whim.state[this.$whim.accessUser.id].pieces;
       pieces.push({
         label: random(["fu", "fu", "fu", "gin", "hisha", "kaku", "kin"]),
