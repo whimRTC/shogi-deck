@@ -1,7 +1,7 @@
 <template>
   <div class="piece-box" :class="[{ droppable }, `background-${ownerNumber}`]">
     <img
-      :src="require(`@/assets/${label}.png`)"
+      :src="require(`@/assets/images/${label}.png`)"
       class="piece"
       :class="[rotateClass, { dragging: myDragging }]"
       v-if="label"
@@ -101,8 +101,9 @@ export default {
     },
     draggable() {
       return (
-        this.$whim.state.turnOrder[this.$whim.state.currentTurnIndex] ===
-          this.$whim.accessUser.id &&
+        this.$whim.users.map(user => user.id)[
+          this.$whim.state.currentTurnIndex
+        ] === this.$whim.accessUser.id &&
         this.ownerNumber === this.$whim.state.currentTurnIndex &&
         this.$whim.state.phase === "play"
       );

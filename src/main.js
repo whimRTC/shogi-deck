@@ -1,6 +1,7 @@
 import Vue from "vue";
 import App from "./App.vue";
 import whimClientVue from "whim-client-vue";
+import moveMatrixes from "./assets/config/moveMatrixes";
 import "whim-client-vue/dist/whim-client-vue.css";
 import "./assets/common.scss";
 import "./utils/dnd-polyfill";
@@ -41,7 +42,7 @@ Vue.prototype.$piece = place => {
 };
 
 Vue.prototype.$turnNumber = userId => {
-  return Vue.prototype.$whim.state.turnOrder?.indexOf(userId);
+  return Vue.prototype.$whim.users.map(user => user.id).indexOf(userId);
 };
 
 const dot = (matrix, vector) => {
@@ -50,95 +51,8 @@ const dot = (matrix, vector) => {
   });
 };
 
-const moveMatrix = {
-  fu: [
-    [
-      [1, 0],
-      [0, 1]
-    ]
-  ],
-  ou: [
-    [
-      [1, 0],
-      [0, 1]
-    ],
-    [
-      [-1, 0],
-      [0, -1]
-    ],
-    [
-      [0, 1],
-      [1, 0]
-    ],
-    [
-      [0, -1],
-      [-1, 0]
-    ],
-    [
-      [1, 1],
-      [1, 1]
-    ],
-    [
-      [1, -1],
-      [-1, 1]
-    ],
-    [
-      [-1, 1],
-      [1, -1]
-    ],
-    [
-      [-1, -1],
-      [-1, -1]
-    ]
-  ],
-  gin: [
-    [
-      [1, 0],
-      [0, 1]
-    ],
-    [
-      [1, 1],
-      [1, 1]
-    ],
-    [
-      [1, -1],
-      [-1, 1]
-    ],
-    [
-      [-1, 1],
-      [1, -1]
-    ],
-    [
-      [-1, -1],
-      [-1, -1]
-    ]
-  ],
-  kin: [
-    [
-      [1, 0],
-      [0, 1]
-    ],
-    [
-      [-1, 0],
-      [0, -1]
-    ],
-    [
-      [0, 1],
-      [1, 0]
-    ],
-    [
-      [0, -1],
-      [-1, 0]
-    ],
-    [
-      [1, 1],
-      [1, 1]
-    ],
-    [
-      [1, -1],
-      [-1, 1]
-    ]
-  ]
+const multi = (k, matrix) => {
+  return matrix.map(row => row.map(column => column * k));
 };
 
 Vue.prototype.$droppable = (originPlace, targetPlace) => {
@@ -158,51 +72,30 @@ Vue.prototype.$droppable = (originPlace, targetPlace) => {
 
   const direction = piece.direction;
 
-  const x = originPlace[0];
-  const y = originPlace[1];
   let possibilityPlaces = [];
-  if (piece.label === "kaku") {
-    const kakuDirections = [
-      [-1, -1],
-      [-1, 1],
-      [1, -1],
-      [1, 1]
-    ];
-    kakuDirections.forEach(kakuDirection => {
-      for (let i = 1; i <= 5; i++) {
-        const movedPlace = [x + kakuDirection[0] * i, y + kakuDirection[1] * i];
-        possibilityPlaces.push(movedPlace);
+
+  let pieceLabel = piece.label;
+  if (pieceLabel) {
+    moveMatrixes[pieceLabel].map(mm => {
+      let straightLen = 1;
+      if (mm.straight) {
+        straightLen = 8;
+      }
+
+      for (let k = 1; k <= straightLen; k++) {
+        const place = dot(multi(k, mm.matrix), direction).map(
+          (value, i) => value + originPlace[i]
+        );
         // 他のコマは飛び越えられない
-        if (Vue.prototype.$piece(movedPlace)) {
+        possibilityPlaces.push(place);
+        if (Vue.prototype.$piece(place)) {
           break;
         }
       }
     });
-  } else if (piece.label === "hisha") {
-    const hishaDirections = [
-      [-1, 0],
-      [1, 0],
-      [0, -1],
-      [0, 1]
-    ];
-    hishaDirections.forEach(hishaDirection => {
-      for (let i = 1; i <= 5; i++) {
-        const movedPlace = [
-          x + hishaDirection[0] * i,
-          y + hishaDirection[1] * i
-        ];
-        possibilityPlaces.push(movedPlace);
-        // 他のコマは飛び越えられない
-        if (Vue.prototype.$piece(movedPlace)) {
-          break;
-        }
-      }
-    });
-  } else {
-    possibilityPlaces = moveMatrix[piece.label].map(mm =>
-      dot(mm, direction).map((value, i) => value + originPlace[i])
-    );
   }
+
+  possibilityPlaces.flat();
   console.log(possibilityPlaces);
   return possibilityPlaces.some(
     pp => JSON.stringify(pp) === JSON.stringify(targetPlace)

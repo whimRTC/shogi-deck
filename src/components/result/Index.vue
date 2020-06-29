@@ -1,7 +1,7 @@
 <template>
   <div class="center">
-    <img v-if="isWinner" src="@/assets/win.png" class="img" />
-    <img v-else src="@/assets/lose.png" class="img" />
+    <img v-if="isWinner" src="@/assets/images/win.png" class="img" />
+    <img v-else src="@/assets/images/lose.png" class="img" />
   </div>
 </template>
 <script>

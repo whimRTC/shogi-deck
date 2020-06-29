@@ -5,7 +5,7 @@
         <div v-if="wasKnockOut(0)" class="knock-out"></div>
       </div>
 
-      <template v-for="player in $whim.state.turnOrder.length - 1">
+      <template v-for="player in this.$whim.users.length - 1">
         <a href="#" class="arrow" :key="`arrow-${player}`"></a>
         <div
           :key="player"
@@ -52,7 +52,7 @@
           :player="player"
         ></Hand>
       </div>
-      <img class="image" src="@/assets/deck.png" @click="drawPiece" />
+      <img class="image" src="@/assets/images/deck.png" @click="drawPiece" />
     </div>
   </div>
 </template>
@@ -128,13 +128,13 @@ export default {
     },
     players() {
       return getAllIndexes(
-        this.$whim.state.turnOrder,
+        this.$whim.users.map(user => user.id),
         this.$whim.accessUser.id
       );
     },
     wasKnockOut() {
       return player => {
-        const userId = this.$whim.state.turnOrder[player];
+        const userId = this.$whim.users.map(user => user.id)[player];
         return !this.$whim.state[userId].pieces;
       };
     },
@@ -183,16 +183,29 @@ export default {
     drawPiece() {
       // 自分のターンではないとき
       if (
-        this.$whim.state.turnOrder[this.$whim.state.currentTurnIndex] !==
-        this.$whim.accessUser.id
+        this.$whim.users.map(user => user.id)[
+          this.$whim.state.currentTurnIndex
+        ] !== this.$whim.accessUser.id
       ) {
         return;
       }
       // 自分の持ち駒が5個以上のとき
+      if (this.myHands.length >= 5) {
+        return;
+      }
 
       let pieces = this.$whim.state[this.$whim.accessUser.id].pieces;
       pieces.push({
-        label: random(["fu", "fu", "fu", "gin", "hisha", "kaku", "kin"]),
+        label: random([
+          "fu",
+          "fu",
+          "fu",
+          "gin",
+          "hisha",
+          "kaku",
+          "kin",
+          "kyosya"
+        ]),
         position: "hand"
       });
 
@@ -205,8 +218,7 @@ export default {
     },
     nextTurn() {
       let nextIndex =
-        (this.$whim.state.currentTurnIndex + 1) %
-        this.$whim.state.turnOrder.length;
+        (this.$whim.state.currentTurnIndex + 1) % this.$whim.users.length;
       this.$whim.assignState({
         currentTurnIndex: nextIndex,
         sound: true

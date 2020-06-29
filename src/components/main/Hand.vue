@@ -1,6 +1,6 @@
 <template>
   <img
-    :src="require(`@/assets/${label}.png`)"
+    :src="require(`@/assets/images/${label}.png`)"
     class="piece"
     :draggable="draggable"
     :class="{ dragging }"

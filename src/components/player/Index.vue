@@ -17,7 +17,7 @@ export default {
   }, // 表示されているUserの情報
   computed: {
     userNumber() {
-      return this.$whim.state.turnOrder.indexOf(this.displayUser.id);
+      return this.$whim.users.map(user => user.id).indexOf(this.displayUser.id);
     },
     team() {
       return this.$whim.state.teams.findIndex(t =>
@@ -25,7 +25,10 @@ export default {
       );
     },
     players() {
-      return getAllIndexes(this.$whim.state.turnOrder, this.displayUser.id);
+      return getAllIndexes(
+        this.$whim.users.map(user => user.id),
+        this.displayUser.id
+      );
     },
     borderClass() {
       if (this.players.length === 1) {
