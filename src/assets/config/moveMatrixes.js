@@ -158,6 +158,50 @@ module.exports = {
       straight: false
     }
   ],
+  narigin: [
+    {
+      matrix: [
+        [1, 0],
+        [0, 1]
+      ],
+      straight: false
+    },
+    {
+      matrix: [
+        [-1, 0],
+        [0, -1]
+      ],
+      straight: false
+    },
+    {
+      matrix: [
+        [0, 1],
+        [1, 0]
+      ],
+      straight: false
+    },
+    {
+      matrix: [
+        [0, -1],
+        [-1, 0]
+      ],
+      straight: false
+    },
+    {
+      matrix: [
+        [1, 1],
+        [1, 1]
+      ],
+      straight: false
+    },
+    {
+      matrix: [
+        [1, -1],
+        [-1, 1]
+      ],
+      straight: false
+    }
+  ],
   kin: [
     {
       matrix: [
@@ -232,6 +276,64 @@ module.exports = {
       straight: true
     }
   ],
+  ryuma: [
+    {
+      matrix: [
+        [1, 0],
+        [0, 1]
+      ],
+      straight: false
+    },
+    {
+      matrix: [
+        [-1, 0],
+        [0, -1]
+      ],
+      straight: false
+    },
+    {
+      matrix: [
+        [0, 1],
+        [1, 0]
+      ],
+      straight: false
+    },
+    {
+      matrix: [
+        [0, -1],
+        [-1, 0]
+      ],
+      straight: false
+    },
+    {
+      matrix: [
+        [1, 1],
+        [1, 1]
+      ],
+      straight: true
+    },
+    {
+      matrix: [
+        [1, -1],
+        [-1, 1]
+      ],
+      straight: true
+    },
+    {
+      matrix: [
+        [-1, 1],
+        [1, -1]
+      ],
+      straight: true
+    },
+    {
+      matrix: [
+        [-1, -1],
+        [-1, -1]
+      ],
+      straight: true
+    }
+  ],
   hi: [
     {
       matrix: [
@@ -260,6 +362,64 @@ module.exports = {
         [-1, 0]
       ],
       straight: true
+    }
+  ],
+  ryuou: [
+    {
+      matrix: [
+        [1, 0],
+        [0, 1]
+      ],
+      straight: true
+    },
+    {
+      matrix: [
+        [-1, 0],
+        [0, -1]
+      ],
+      straight: true
+    },
+    {
+      matrix: [
+        [0, 1],
+        [1, 0]
+      ],
+      straight: true
+    },
+    {
+      matrix: [
+        [0, -1],
+        [-1, 0]
+      ],
+      straight: true
+    },
+    {
+      matrix: [
+        [1, 1],
+        [1, 1]
+      ],
+      straight: false
+    },
+    {
+      matrix: [
+        [1, -1],
+        [-1, 1]
+      ],
+      straight: false
+    },
+    {
+      matrix: [
+        [-1, 1],
+        [1, -1]
+      ],
+      straight: false
+    },
+    {
+      matrix: [
+        [-1, -1],
+        [-1, -1]
+      ],
+      straight: false
     }
   ],
   ou: [

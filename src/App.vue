@@ -56,7 +56,7 @@ export default {
                 position: "hand"
               },
               {
-                label: "kin",
+                label: "gin",
                 position: "hand"
               }
             ]

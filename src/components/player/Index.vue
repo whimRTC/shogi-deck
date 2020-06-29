@@ -2,11 +2,6 @@
   <div class="border" :class="borderClass"></div>
 </template>
 <script>
-function getAllIndexes(arr, val) {
-  let indexes = [];
-  for (let i = 0; i < arr.length; i++) if (arr[i] === val) indexes.push(i);
-  return indexes;
-}
 export default {
   name: "Player",
   props: {
@@ -16,44 +11,17 @@ export default {
     }
   }, // 表示されているUserの情報
   computed: {
-    userNumber() {
-      return this.$whim.users.map(user => user.id).indexOf(this.displayUser.id);
-    },
-    team() {
-      return this.$whim.state.teams.findIndex(t =>
-        t.includes(this.displayUser.id)
-      );
-    },
-    players() {
-      return getAllIndexes(
-        this.$whim.users.map(user => user.id),
-        this.displayUser.id
-      );
-    },
     borderClass() {
-      if (this.players.length === 1) {
-        return [
-          `user-${this.players[0]}`,
-          `active-${this.$whim.state.currentTurnIndex}`
-        ];
-      } else {
-        return [
-          `user-${this.players[0]}-${this.players[1]}`,
-          `active-${this.$whim.state.currentTurnIndex}`
-        ];
-      }
+      return [
+        `user-${this.displayUser.positionNumber - 1}`,
+        `active-${this.$whim.state.currentTurnIndex}`
+      ];
     }
   }
 };
 </script>
 <style lang="scss" scoped>
 @import "@/assets/colors.scss";
-
-.team {
-  font-weight: bold;
-  text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, -1px 1px 0 #fff,
-    1px -1px 0 #fff, 0px 1px 0 #fff, 0-1px 0 #fff, -1px 0 0 #fff, 1px 0 0 #fff;
-}
 
 .border {
   box-sizing: border-box;
@@ -66,35 +34,6 @@ export default {
       border: 10px solid rgba(map-get($user-colors, $i), 0.2);
       &.active-#{$i} {
         border: 10px solid rgba(map-get($user-colors, $i), 0.9);
-      }
-    }
-  }
-
-  @for $i from 0 to 7 {
-    @for $j from 0 to 7 {
-      &.user-#{$i}-#{$j} {
-        border: 10px solid rgba(map-get($user-colors, $i), 0.2);
-        &.active-#{$i} {
-          border: 10px solid rgba(map-get($user-colors, $i), 0.9);
-        }
-        &.active-#{$j} {
-          &:before {
-            border: 10px solid rgba(map-get($user-colors, $j), 0.9);
-          }
-        }
-        &:before {
-          background: none;
-          border: 10px solid rgba(map-get($user-colors, $j), 0.2);
-          border-radius: 10px;
-          content: "";
-          display: block;
-          position: absolute;
-          top: 4px;
-          left: 4px;
-          right: 4px;
-          bottom: 4px;
-          pointer-events: none;
-        }
       }
     }
   }

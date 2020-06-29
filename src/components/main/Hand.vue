@@ -17,8 +17,7 @@ export default {
     };
   },
   props: {
-    handIndex: Number,
-    player: Number
+    handIndex: Number
   },
   computed: {
     piece() {
@@ -33,7 +32,8 @@ export default {
     },
     draggable() {
       return (
-        this.$whim.state.currentTurnIndex === this.player &&
+        this.$whim.state.currentTurnIndex ===
+          this.$whim.accessUser.positionNumber - 1 &&
         this.$whim.state.phase === "play"
       );
     }

@@ -1,9 +1,10 @@
 <template>
   <div class="main" :class="`area-${areaLength}`">
     <div class="order">
-      <div class="circle-0" :class="`active-${$whim.state.currentTurnIndex}`">
-        <div v-if="wasKnockOut(0)" class="knock-out"></div>
-      </div>
+      <div
+        class="circle-0"
+        :class="`active-${$whim.state.currentTurnIndex}`"
+      ></div>
 
       <template v-for="player in this.$whim.users.length - 1">
         <a href="#" class="arrow" :key="`arrow-${player}`"></a>
@@ -13,9 +14,7 @@
             `circle-${player}`,
             `active-${$whim.state.currentTurnIndex}`
           ]"
-        >
-          <div v-if="wasKnockOut(player)" class="knock-out"></div>
-        </div>
+        ></div>
       </template>
     </div>
     <div v-for="x in xRange" :key="x" class="row" :class="`row-${x}`">
@@ -36,11 +35,9 @@
     </div>
     <div class="flex">
       <div
-        v-for="player in players"
         class="hands"
-        :key="`player-${player}`"
         :class="[
-          `background-${player}`,
+          `background-${$whim.accessUser.positionNumber - 1}`,
           `active-${$whim.state.currentTurnIndex}`
         ]"
       >
@@ -49,11 +46,27 @@
           :key="i"
           :handIndex="i"
           @dragging="setDragging"
-          :player="player"
         ></Hand>
       </div>
       <img class="image" src="@/assets/images/deck.png" @click="drawPiece" />
     </div>
+    <div class="modal" v-if="judgeNariginId">
+      <div class="modal__bg"></div>
+      <div class="modal__content">
+        <img
+          src="@/assets/images/gin.png"
+          class="piece"
+          @click="nariGin(false)"
+        />
+        <img
+          src="@/assets/images/narigin.png"
+          class="select-piece"
+          @click="nariGin(true)"
+        />
+      </div>
+      <!--modal__inner-->
+    </div>
+    <!--modal-->
   </div>
 </template>
 
@@ -70,15 +83,18 @@ const areaLength = {
   8: 8
 };
 
+const NARIGOMA = {
+  fu: "to",
+  kyosya: "narikyo",
+  keima: "narikei",
+  gin: "narigin",
+  kaku: "ryuma",
+  hisya: "ryuo"
+};
+
 const SE_MOVE = new Howl({
   src: require("@/assets/shogi.mp3")
 });
-
-function getAllIndexes(arr, val) {
-  let indexes = [];
-  for (let i = 0; i < arr.length; i++) if (arr[i] === val) indexes.push(i);
-  return indexes;
-}
 
 function random(a) {
   return a[Math.floor(Math.random() * a.length)];
@@ -92,7 +108,8 @@ export default {
   name: "Main",
   data() {
     return {
-      dragging: null
+      dragging: null,
+      judgeNariginId: null
     };
   },
   components: {
@@ -116,6 +133,7 @@ export default {
       return (this.$whim.state.hand || {})[this.$whim.state.currentTurnIndex];
     },
     myHands() {
+      console.log(this.$whim.state[this.$whim.accessUser.id].pieces);
       return this.$whim.state[this.$whim.accessUser.id].pieces?.reduce(function(
         a,
         e,
@@ -125,18 +143,6 @@ export default {
         return a;
       },
       []); // [0, 3, 5]
-    },
-    players() {
-      return getAllIndexes(
-        this.$whim.users.map(user => user.id),
-        this.$whim.accessUser.id
-      );
-    },
-    wasKnockOut() {
-      return player => {
-        const userId = this.$whim.users.map(user => user.id)[player];
-        return !this.$whim.state[userId].pieces;
-      };
     },
     sound() {
       return this.$whim.state.sound;
@@ -161,24 +167,6 @@ export default {
       } else {
         return [this.areaLength - 1 - position[1], position[0]];
       }
-    },
-    isKnockOut(player, targetPlace) {
-      for (let i = 0; i < 6; i++) {
-        for (let j = 0; j < 5; j++) {
-          if (i === targetPlace[0] && j === targetPlace[1]) {
-            continue;
-          }
-          if ((this.$whim.state.board[i] || {})[j]?.owner === player) {
-            return false;
-          }
-        }
-      }
-      console.log("t1");
-      const player_hand = (this.$whim.state.hand || {})[player] || [];
-      if (player_hand.length === 0) {
-        return true;
-      }
-      return false;
     },
     drawPiece() {
       // 自分のターンではないとき
@@ -216,14 +204,6 @@ export default {
       });
       this.nextTurn();
     },
-    nextTurn() {
-      let nextIndex =
-        (this.$whim.state.currentTurnIndex + 1) % this.$whim.users.length;
-      this.$whim.assignState({
-        currentTurnIndex: nextIndex,
-        sound: true
-      });
-    },
     dropPiece(event, relativeTargetPlace) {
       const targetPlace = this.transformCoordinate(relativeTargetPlace);
       // 不正な位置の場合キャンセル
@@ -244,9 +224,11 @@ export default {
           });
         }
 
-        // とを取ったら歩兵に戻す
-        if (targetLabel === "to") {
-          targetLabel = "fu";
+        const narigoma = Object.entries(NARIGOMA).find(
+          koma => koma[1] === targetLabel
+        );
+        if (narigoma) {
+          targetLabel = narigoma[0];
         }
 
         // コマを削除
@@ -269,36 +251,76 @@ export default {
             pieces
           }
         });
-
-        // 戦闘不能判定
-        // const owner = this.$piece(targetPlace).owner;
-        // if (this.isKnockOut(owner, targetPlace)) {
-        //   this.$whim.assignState({
-        //     knockOut: (this.$whim.state.knockOut || []).concat(owner)
-        //   });
-        // }
       }
 
-      let pieces = this.$whim.state[this.$whim.accessUser.id].pieces;
-      pieces[this.dragging.id].position = targetPlace;
+      console.log(this.$whim.state);
+      this.$whim.assignState({
+        [this.$whim.accessUser.id]: {
+          pieces: {
+            [this.dragging.id]: {
+              position: targetPlace
+            }
+          }
+        }
+      });
+      console.log(this.$whim.state);
 
       // 成る場合
       if (
-        this.dragging.label === "fu" &&
-        0 === relativeTargetPlace[0] &&
+        ([0, 1].includes(relativeTargetPlace[0]) ||
+          [0, 1].includes(
+            this.transformCoordinate(this.dragging.position)[0]
+          )) &&
         this.dragging.position !== "hand"
       ) {
-        pieces[this.dragging.id].label = "to";
+        this.judgeNarigoma();
+      } else {
+        this.dragging = null;
+        this.nextTurn();
       }
-
+    },
+    judgeNarigoma() {
+      if (this.dragging.label === "gin") {
+        this.judgeNariginId = this.dragging.id;
+      } else {
+        this.narigoma();
+        this.nextTurn();
+      }
+      this.dragging = null;
+    },
+    nariGin(bool) {
+      if (bool) {
+        this.$whim.assignState({
+          [this.$whim.accessUser.id]: {
+            pieces: {
+              [this.judgeNariginId]: {
+                label: "narigin"
+              }
+            }
+          }
+        });
+      }
+      this.judgeNariginId = null;
+      this.nextTurn();
+    },
+    narigoma() {
       this.$whim.assignState({
         [this.$whim.accessUser.id]: {
-          pieces
+          pieces: {
+            [this.dragging.id]: {
+              label: NARIGOMA[this.dragging.label] || this.dragging.label
+            }
+          }
         }
       });
-
-      this.dragging = null;
-      this.nextTurn();
+    },
+    nextTurn() {
+      let nextIndex =
+        (this.$whim.state.currentTurnIndex + 1) % this.$whim.users.length;
+      this.$whim.assignState({
+        currentTurnIndex: nextIndex,
+        sound: true
+      });
     }
   },
   watch: {
@@ -318,7 +340,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/colors.scss";
 
-// 箱のサイズは文字盤の大きさにより変わる
+// マスのサイズは文字盤の大きさにより変わる
 $size: (
   5: (
     width: 12vh,
@@ -418,30 +440,6 @@ $size: (
   }
 }
 
-.knock-out {
-  display: inline-block;
-  position: absolute;
-  z-index: 1;
-  padding: 0;
-  width: 4px;
-  height: 20px;
-  background: #000;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-.knock-out:before {
-  display: block;
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: -8px;
-  width: 20px;
-  height: 4px;
-  margin-top: -2px;
-  background: #000;
-}
-
 .flex {
   display: flex;
   justify-content: flex-start;
@@ -490,5 +488,30 @@ $size: (
       background-color: rgba(map-get($user-colors, $i), 0.6);
     }
   }
+}
+.modal {
+  height: 100%;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+.modal__bg {
+  background: rgba(0, 0, 0, 0.8);
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+.modal__content {
+  left: 50%;
+  padding: 40px;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+}
+.select-piece {
+  width: 20%;
 }
 </style>

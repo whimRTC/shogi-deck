@@ -58,7 +58,6 @@ const multi = (k, matrix) => {
 Vue.prototype.$droppable = (originPlace, targetPlace) => {
   const piece = Vue.prototype.$piece(originPlace);
   const targetPiece = Vue.prototype.$piece(targetPlace);
-  console.log(piece);
 
   // コマが存在しない場合(手持ちから出す場合)
   if (piece === "hand") {
