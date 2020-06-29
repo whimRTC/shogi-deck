@@ -27,7 +27,6 @@ Vue.prototype.$piece = place => {
     );
     const piece = (value[1]?.pieces || [])[pieceIndex];
     if (piece) {
-      // console.log(piece);
       self = {
         id: pieceIndex,
         userId: value[0],
@@ -95,11 +94,32 @@ Vue.prototype.$droppable = (originPlace, targetPlace) => {
   }
 
   possibilityPlaces.flat();
-  console.log(possibilityPlaces);
   return possibilityPlaces.some(
     pp => JSON.stringify(pp) === JSON.stringify(targetPlace)
   );
 };
+
+// load all images
+[
+  "fu",
+  "gin",
+  "gyoku",
+  "hisha",
+  "kaku",
+  "keima",
+  "kin",
+  "kyosya",
+  "narigin",
+  "narikei",
+  "narikyo",
+  "ou",
+  "ryuma",
+  "ryuo",
+  "to"
+].map(label => {
+  const image = new Image();
+  image.src = require("@/assets/images/" + label + ".png");
+});
 
 new Vue({
   render: h => h(App)

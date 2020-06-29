@@ -145,7 +145,6 @@ export default {
       return (this.$whim.state.hand || {})[this.$whim.state.currentTurnIndex];
     },
     myHands() {
-      console.log(this.$whim.state[this.$whim.accessUser.id].pieces);
       return this.$whim.state[this.$whim.accessUser.id].pieces?.reduce(function(
         a,
         e,
@@ -279,7 +278,6 @@ export default {
         });
       }
 
-      console.log(this.$whim.state);
       this.$whim.assignState({
         [this.$whim.accessUser.id]: {
           pieces: {
@@ -289,7 +287,6 @@ export default {
           }
         }
       });
-      console.log(this.$whim.state);
 
       // 成る場合
       if (
@@ -516,6 +513,7 @@ $size: (
       max-height: calc(#{map-get($value, max-height)} * 3 / 4);
       width: calc(#{map-get($value, width)} * 3 / 4);
       max-width: calc(#{map-get($value, max-width)} * 3 / 4);
+      z-index: 2;
     }
   }
 }
