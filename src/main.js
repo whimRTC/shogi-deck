@@ -7,7 +7,18 @@ import "./assets/common.scss";
 import "./utils/dnd-polyfill";
 
 Vue.config.productionTip = false;
-Vue.use(whimClientVue);
+Vue.use(whimClientVue, {
+  sound: {
+    move: {
+      src: require("@/assets/move.mp3"),
+      volume: 0.1
+    },
+    draw: {
+      src: require("@/assets/draw.mp3"),
+      volume: 0.2
+    }
+  }
+});
 
 // settings for debug
 let recaptchaScript = document.createElement("script");

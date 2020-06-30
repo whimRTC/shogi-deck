@@ -9,7 +9,7 @@
         }}
       </div>
 
-      <template v-for="player in this.$whim.users.length - 1">
+      <template v-for="player in $whim.users.length - 1">
         <a href="#" class="arrow" :key="`arrow-${player}`"></a>
         <div
           :key="player"
@@ -82,8 +82,6 @@
 </template>
 
 <script>
-import { Howl } from "howler";
-
 const areaLength = {
   2: 5,
   3: 6,
@@ -103,9 +101,9 @@ const NARIGOMA = {
   hisya: "ryuo"
 };
 
-const SE_MOVE = new Howl({
-  src: require("@/assets/shogi.mp3")
-});
+// const SE_MOVE = new Howl({
+//   src: require("@/assets/shogi.mp3")
+// });
 
 function random(a) {
   return a[Math.floor(Math.random() * a.length)];
@@ -228,6 +226,7 @@ export default {
         }
       });
       this.nextTurn();
+      this.$whim.sound("draw");
     },
     dropPiece(event, relativeTargetPlace) {
       const targetPlace = this.transformCoordinate(relativeTargetPlace);
@@ -301,6 +300,7 @@ export default {
         this.dragging = null;
         this.nextTurn();
       }
+      this.$whim.sound("move");
     },
     judgeNarigoma() {
       if (this.dragging.label === "gin") {
@@ -341,21 +341,12 @@ export default {
       let nextIndex =
         (this.$whim.state.currentTurnIndex + 1) % this.$whim.users.length;
       this.$whim.assignState({
-        currentTurnIndex: nextIndex,
-        sound: true
+        currentTurnIndex: nextIndex
+        // sound: true
       });
     }
   },
   watch: {
-    sound: function(newSound) {
-      if (newSound) {
-        SE_MOVE.volume(0.1);
-        SE_MOVE.play();
-        this.$whim.assignState({
-          sound: false
-        });
-      }
-    },
     action: function(newAction) {
       if (newAction?.label == "draw") {
         this.deckColor = `color-filter--${newAction.userIndex}`;

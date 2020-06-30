@@ -158,12 +158,6 @@ export default {
   transform: rotate(90deg);
 }
 
-// @for $i from 0 to 7 {
-//   .background-#{$i} {
-//     background-color: rgba(map-get($user-colors, $i), 0.3);
-//   }
-// }
-
 .dragging {
   height: 18vw !important;
   max-height: 12vh !important;
