@@ -342,7 +342,6 @@ export default {
         (this.$whim.state.currentTurnIndex + 1) % this.$whim.users.length;
       this.$whim.assignState({
         currentTurnIndex: nextIndex
-        // sound: true
       });
     }
   },
