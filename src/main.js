@@ -21,9 +21,9 @@ Vue.use(whimClientVue, {
 });
 
 // settings for debug
-let recaptchaScript = document.createElement("script");
-recaptchaScript.setAttribute("src", "http://localhost:8098");
-document.head.appendChild(recaptchaScript);
+// let recaptchaScript = document.createElement("script");
+// recaptchaScript.setAttribute("src", "http://localhost:8098");
+// document.head.appendChild(recaptchaScript);
 
 Vue.prototype.$piece = place => {
   if (place === "hand") {
