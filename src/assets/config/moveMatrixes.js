@@ -334,7 +334,7 @@ module.exports = {
       straight: true
     }
   ],
-  hi: [
+  hisha: [
     {
       matrix: [
         [1, 0],
