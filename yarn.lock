@@ -903,6 +903,11 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/howler@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@types/howler/-/howler-2.2.1.tgz#c95314724a8e970b1b29a731861975f39987b9ca"
+  integrity sha512-1MiSldngr+eAO4lDPtjzl4Nf2GmRh8VDHIpNBIkyd25L22JExVlI6w3fjSM7+FNc1e1WZAPNq7/flkw685byfg==
+
 "@types/json-schema@^7.0.4":
   version "7.0.5"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.5.tgz#dcce4430e64b443ba8945f0290fb564ad5bac6dd"
@@ -3045,9 +3050,9 @@ electron-to-chromium@^1.3.413:
   integrity sha512-U+QgsL8TZDU/n+rDnYDa3hY5uy3C4iry9mrJS0PNBBGwnocuQ+aHSfgY44mdlaK9744X5YqrrGUvD9PxCLY1HA==
 
 elliptic@^6.0.0, elliptic@^6.5.2:
-  version "6.5.2"
-  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.2.tgz#05c5678d7173c049d8ca433552224a495d0e3762"
-  integrity sha512-f4x70okzZbIQl/NSRLkI/+tteV/9WqL98zx+SQ69KbXxmVrmjwsNUPn/gYJJ0sHvEak24cZgHIPegRePAtA/xw==
+  version "6.5.3"
+  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.3.tgz#cb59eb2efdaf73a0bd78ccd7015a62ad6e0f93d6"
+  integrity sha512-IMqzv5wNQf+E6aHeIqATs0tOLeOTwj1QKbRcS3jBbYkl5oLAserA8yJTT7/VyHUYG91PRmPyeQDObKLPpeS4dw==
   dependencies:
     bn.js "^4.4.0"
     brorand "^1.0.1"
@@ -8243,11 +8248,13 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
-whim-client-vue@^1.2.8:
-  version "1.2.8"
-  resolved "https://registry.yarnpkg.com/whim-client-vue/-/whim-client-vue-1.2.8.tgz#b0b4eb13ee2983e3c8e794db8e2b6a2d895e45d9"
-  integrity sha512-rng2Qp3cGPppby8Czgu7gpeYF6VsOriiMTyxo6D5UZQ5IhYtaMcdLFCxrPf8T3qWIJdffpyVZEOsmwxWRwvMzQ==
+whim-client-vue@^1.2.10:
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/whim-client-vue/-/whim-client-vue-1.2.11.tgz#7f3ff430ef83698e0f39209d73d257a7c4a41e02"
+  integrity sha512-9+XJPaMgKV38B4lvl+qoz19PgpaQCFBpoDWJA8Vy39gMvLWPBQvqTIYD38Mmg9AbrnTE5CiHW6w+LIKwIji2Hw==
   dependencies:
+    "@types/howler" "^2.2.1"
+    howler "^2.2.0"
     vuex "^3.1.3"
 
 word-wrap@~1.2.3:
